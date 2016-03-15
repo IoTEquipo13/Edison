@@ -9,10 +9,13 @@ import random
 
 counter = 0
 
-# Create the button object using GPIO pin 0
+# Create the button object using GPIO pin 2
 button = mraa.Gpio(2)
 
-# Create the buzzer object using GPIO pin 5
+# Create the Grove LED object using GPIO pin 4
+led = grove.GroveLed(4)
+
+# Create the buzzer object using GPIO pin 3
 buzzer = upmBuzzer.Buzzer(3)
 button.dir(mraa.DIR_IN)
 
@@ -31,6 +34,7 @@ lcdDisplay.write(str(counter))
 while 1:
   if(button.read() != 0):
     lcdDisplay.setCursor(0, 0)
+    led.on()
     counter = counter + 1
     lcdDisplay.write(str(counter))
     r = random.randint(0, 255)
@@ -42,9 +46,13 @@ while 1:
       print ("Boton presionado")
       buzzer.playSound(chords[chord_ind], 1000000)
       time.sleep(0.0001)
+      led.off()
 
 # Delete the buzzer object
 del buzzer
 
 # Delete the button object
+
 del button
+
+
