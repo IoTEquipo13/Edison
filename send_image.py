@@ -2,7 +2,7 @@ import requests
 
 
 print "ANTES DEL GET"
-response = requests.get('https://104.44.133.248/plate')
+response = requests.get('http://189.234.140.164:80')
 
 print "despues del get"
 
