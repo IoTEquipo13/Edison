@@ -4,7 +4,7 @@ from flask import Flask, request, redirect, url_for
 from werkzeug import secure_filename
 
 app = FlaskAPI(__name__)
-UPLOAD_FOLDER = '/home/miguel/plates/'
+UPLOAD_FOLDER = '/home/miguel/plates'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 
