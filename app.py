@@ -1,7 +1,8 @@
 from flask.ext.api import FlaskAPI
 import os
-from flask import Flask, request, redirect, url_for
+from flask import request
 from werkzeug import secure_filename
+import subprocess
 
 app = FlaskAPI(__name__)
 UPLOAD_FOLDER = '/home/miguel/plates'
@@ -16,6 +17,13 @@ def process_image():
         if file:
             filename = secure_filename(file.filename)
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+
+            # imagen = open(filename, 'rb')
+            command = "alpr /home/miguel/{} -n 1".format(filename)
+            process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE)
+            output = process.communicate()[0]
+            raise Exception(output)
+
             return 'Image Accepted!'
     raise InvalidData('The given information is invalid')
 
