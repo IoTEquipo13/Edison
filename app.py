@@ -3,9 +3,11 @@ import os
 from flask import request
 from werkzeug import secure_filename
 import subprocess
+import json
+import requests
 
 app = FlaskAPI(__name__)
-UPLOAD_FOLDER = '/home/miguel/plates'
+UPLOAD_FOLDER = '/home/miguel/'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 
@@ -17,15 +19,19 @@ def process_image():
         if file:
             filename = secure_filename(file.filename)
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-
+            print "imagen guardada con nombre {}".format(filename)
             # imagen = open(filename, 'rb')
-            command = "alpr /home/miguel/{} -n 1".format(filename)
-            process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE)
-            output = process.communicate()[0]
-            raise Exception(output)
-
+            command = "alpr /home/miguel/{} -n 1 -j".format(filename)
+            process = subprocess.Popen(command.split(), stdout=subprocess.PIPE)
+            print "comando ejecutado"
+            output = json.loads(process.communicate()[0])
+            print "Despues del output"
+            true_plate = output['results'][0]['plate']
+            print true_plate
+            response = requests.get('http://greenheadapi.azurewebsites.net/api/place/getzone/{}'.format(true_plate))
+            print response.json()
             return 'Image Accepted!'
-    raise InvalidData('The given information is invalid')
+        raise InvalidData('The given information is invalid')
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0')
