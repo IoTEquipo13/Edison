@@ -25,10 +25,11 @@ def process_image():
             process = subprocess.Popen(command.split(), stdout=subprocess.PIPE)
             print "comando ejecutado"
             output = json.loads(process.communicate()[0])
-
+            print "Despues del output"
             true_plate = output['results'][0]['plate']
             print true_plate
             response = requests.get('http://greenheadapi.azurewebsites.net/api/place/getzone/{}'.format(true_plate))
+            print response.json()
             return 'Image Accepted!'
         raise InvalidData('The given information is invalid')
 
